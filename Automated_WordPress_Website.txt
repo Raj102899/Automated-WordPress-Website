@@ -1,0 +1,73 @@
+STEP 1 :
+CREATING A VPC,
+  Create public VPC >>> create a public subnet >>> Create a Internet gateway(igw) >>> Create a Route table >>> Connect the route table to the igw
+STEP 2:
+CREATE A EC2 INSTANCE,
+Create a ec2 Server in the public subnet of the created VPC.
+image-ubuntu.
+
+STEP 3: 
+SSH into VM.
+
+Update the VM  
+Sudo apt-get update
+
+Install apache server
+sudo apt-get install apache2 
+
+Install php runtime and my sql connecter
+sudo apt-get php libapache2-mod-php php-mysql
+
+Install  Mysql-server
+sudo apt-get install mysql-server
+
+Login to MySQL server
+sudo mysql -u root
+
+Change authentication plugin to mysql_native_password (change the password to something strong)
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password by 'Testpassword@123';
+
+Create a new database user for wordpress (change the password to something strong)
+CREATE USER 'wp_user'@localhost IDENTIFIED BY 'Testpassword@123';
+
+Create a database for wordpress
+CREATE DATABASE wp;
+
+Grant all privilges on the database 'wp' to the newly created user
+GRANT ALL PRIVILEGES ON wp.* TO 'wp_user'@localhost;
+
+
+Download WordPress
+cd /tmp
+wget https://wordpress.org/latest.tar.gz
+
+Unzip
+tar -xvf latest.tar.gz
+
+Move the wordpress folder to apache document root
+sudo mv WordPress/ /var/www/Html
+
+Command to restart/reload apache server
+sudo systemctl restart apache2
+OR
+sudo systemctl reload apache2
+
+Add define ('FS_METHOD,'deirect''); in wp-config file.
+to add plugins
+
+Change the file permission of wp-content to rwx by using these commands,
+sudo chown =R www-data:www-data wp-content/plugins/
+sudo chmod 775 wp-content/
+sudo chown -R www-data:www-data wp-contetn/
+
+
+CHANGING THE DOMAIN NAME
+Copy the host ipv4 address and past it to the DNS and create a DNS at TTL of 60
+add server name and serverAlias to cd/etc/apache2/sites-availale/000.default.config
+
+add 
+define('WP_HOME' 'URL');
+define('WP_SITEURL' ,'URL');
+
+Rrestart apache2
+
